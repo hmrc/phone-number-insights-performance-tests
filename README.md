@@ -2,25 +2,65 @@
 
 Performance test suite for `phone-number-insights`, using [performance-test-runner](https://github.com/hmrc/performance-test-runner) under the hood.
 
-## Pre-requisites
+NOTE: These test rely on specific data in `staging` environment.
+If the data is missing then it can be reloaded using the data files in `src/test/resources/data/`.
+Specifically
 
-### Services
+| file                    |type of data|
+|-------------------------|------------|
+| phone_number_ipp.csv    | ipp relationship data|
+| phone_number_reject.csv | watchlist data|
+| accounts.csv            |used to drive the watchlist simulation|
 
-Start Mongo Docker container following instructions from the [MDTP Handbook](https://docs.tax.service.gov.uk/mdtp-handbook/documentation/developer-set-up/set-up-mongodb.html).
+## Running the tests
 
-### Running locally
-In order to run the service locally, you will need to have localstack installed to provide a local version of AWS
-Secrets Manager which will be used to obtain the secrets required to connect to the Postgres database and for basic auth.
+Prior to executing the tests ensure you have:
 
-To run the service locally, you can use the following command:
+* Docker - to start mongo & postgres container
+* Installed/configured service manager 2 [sm2](https://github.com/hmrc/sm2)
 
-```./run_local.sh```
+If you don't have mongodb installed locally you can run it in docker using the following commands:
 
-This script will start localstack, create the required secrets in Secrets Manager, start a Postgres database in a Docker
-container, and then start the Play application overriding the configuration to point to the localstack instance.
 ```bash
-sm2 --start PLATFORM_TEST_EXAMPLE_UI_TESTS
+    docker run --restart unless-stopped --name mongodb -p 27017:27017 -d percona/percona-server-mongodb:7.0 --replSet rs0
+    docker exec -it mongodb mongosh --eval "rs.initiate();"
 ```
+
+If you don't have postgres installed locally you can run it in docker using the following command
+
+```bash
+    docker run -d --rm --name postgresql -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:latest
+```
+
+Run the following script to start the dependent services locally `./start_services.sh`
+
+#### Smoke test
+
+Before raising a PR, ensure the smoke tests pass locally by running this script:
+```bash
+  ./run-local.sh
+```
+
+#### Run the performance test
+
+To run a full performance test against staging environment, implement a job builder and run the test **only** from Jenkins.
+
+### Scalafmt
+This repository uses [Scalafmt](https://scalameta.org/scalafmt/), a code formatter for Scala. The formatting rules configured for this repository are defined within [.scalafmt.conf](.scalafmt.conf).
+
+To apply formatting to this repository using the configured rules in [.scalafmt.conf](.scalafmt.conf) execute:
+
+ ```bash
+ sbt scalafmtAll
+ ```
+
+To check files have been formatted as expected execute:
+
+ ```bash
+ sbt scalafmtCheckAll scalafmtSbtCheck
+ ```
+
+[Visit the official Scalafmt documentation to view a complete list of tasks which can be run.](https://scalameta.org/scalafmt/docs/installation.html#task-keys)
 
 ### Logging
 
@@ -29,46 +69,6 @@ The default log level for all HTTP requests is set to `WARN`. Configure [logback
 ### WARNING :warning:
 
 Do **NOT** run a full performance test against staging from your local machine. Please [implement a new performance test job](https://docs.tax.service.gov.uk/mdtp-handbook/documentation/mdtp-test-approach/performance-testing/performance-test-a-microservice/index.html) and execute your job from the dashboard in [Performance Jenkins](https://performance.tools.staging.tax.service.gov.uk).
-
-## Tests
-
-Run smoke test (locally) as follows:
-
-```bash
-sbt -Dperftest.runSmokeTest=true -DrunLocal=true gatling:test
-```
-
-Run full performance test (locally) as follows:
-
-```bash
-sbt -DrunLocal=true gatling:test
-```
-
-Run smoke test (staging) as follows:
-
-```bash
-sbt -Dperftest.runSmokeTest=true -DrunLocal=false gatling:test
-```
-
-## Scalafmt
-
-Check all project files are formatted as expected as follows:
-
-```bash
-sbt scalafmtCheckAll scalafmtCheck
-```
-
-Format `*.sbt` and `project/*.scala` files as follows:
-
-```bash
-sbt scalafmtSbt
-```
-
-Format all project files as follows:
-
-```bash
-sbt scalafmtAll
-```
 
 ## License
 

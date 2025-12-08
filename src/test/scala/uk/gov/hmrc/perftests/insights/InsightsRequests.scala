@@ -21,6 +21,8 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
+import java.util.Base64
+
 object InsightsRequests extends ServicesConfiguration {
 
   val baseUrl: String = baseUrlFor("phone-number-insights-proxy")
