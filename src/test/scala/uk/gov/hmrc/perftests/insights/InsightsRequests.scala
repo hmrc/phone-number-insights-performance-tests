@@ -31,7 +31,7 @@ object InsightsRequests extends ServicesConfiguration {
     http("Check if account is on watch list")
       .post(s"$baseUrl/check/insights")
       .header(HttpHeaderNames.ContentType, "application/json")
-      .header(HttpHeaderNames.UserAgent, "pni-performance-tests")
+      .header(HttpHeaderNames.UserAgent, "phone-number-insights-performance-tests")
       .body(StringBody("""|{
                           |  "sortCode": "${sortCode}",
                           |  "accountNumber": "${accountNumber}"

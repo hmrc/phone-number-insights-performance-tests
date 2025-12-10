@@ -29,7 +29,7 @@ object GatewayRequests extends ServicesConfiguration {
     http("Check if number is on watch list")
       .post(s"$baseUrl/check/insights")
       .header(HttpHeaderNames.ContentType, "application/json")
-      .header(HttpHeaderNames.UserAgent, "pni-performance-tests")
+      .header(HttpHeaderNames.UserAgent, "phone-number-insights-performance-tests")
       .body(StringBody("""|{
                           |  "phoneNumber" : "0123456789"
                           |}
