@@ -29,7 +29,17 @@ If you don't have mongodb installed locally you can run it in docker using the f
 If you don't have postgres installed locally you can run it in docker using the following command
 
 ```bash
-    docker run -d --rm --name postgresql -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:latest
+    docker run -d --rm --name postgresql -e POSTGRES_DB=phonenumberinsights -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:latest
+```
+
+### Localstack setup
+
+You will need to have the following environment variables set in order to connect to localstack; they can be anything but are required by the SDK:
+
+```bash
+export AWS_REGION=eu-west-2
+export AWS_ACCESS_KEY_ID=test
+export AWS_SECRET_ACCESS_KEY=test
 ```
 
 Run the following script to start the dependent services locally `./start_services.sh`
@@ -38,7 +48,7 @@ Run the following script to start the dependent services locally `./start_servic
 
 Before raising a PR, ensure the smoke tests pass locally by running this script:
 ```bash
-  ./run-local.sh
+  ./run_local.sh
 ```
 
 #### Run the performance test

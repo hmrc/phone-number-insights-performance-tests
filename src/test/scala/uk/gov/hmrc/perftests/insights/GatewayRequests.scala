@@ -30,8 +30,9 @@ object GatewayRequests extends ServicesConfiguration {
       .post(s"$baseUrl/check/insights")
       .header(HttpHeaderNames.ContentType, "application/json")
       .header(HttpHeaderNames.UserAgent, "phone-number-insights-performance-tests")
+      .header("X-Correlation-ID", "1234566789")
       .body(StringBody("""|{
-                          |  "phoneNumber" : "0123456789"
+                          |  "phoneNumber" : "07234567890"
                           |}
                           |""".stripMargin))
       .asJson

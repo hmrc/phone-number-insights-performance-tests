@@ -21,8 +21,6 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
-import java.util.Base64
-
 object InsightsRequests extends ServicesConfiguration {
 
   val baseUrl: String = baseUrlFor("phone-number-insights-proxy")
@@ -32,9 +30,9 @@ object InsightsRequests extends ServicesConfiguration {
       .post(s"$baseUrl/check/insights")
       .header(HttpHeaderNames.ContentType, "application/json")
       .header(HttpHeaderNames.UserAgent, "phone-number-insights-performance-tests")
+      .header("X-Correlation-ID", "1234566789")
       .body(StringBody("""|{
-                          |  "sortCode": "${sortCode}",
-                          |  "accountNumber": "${accountNumber}"
+                          |  "phoneNumber": "07897654345"
                           |}
                           |""".stripMargin))
       .asJson
