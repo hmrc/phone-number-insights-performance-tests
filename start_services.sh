@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sm2 --start PHONE_NUMBER_INSIGHTS_PROXY PHONE_NUMBER_INSIGHTS PHONE_NUMBER_GATEWAY INTERNAL_AUTH --appendArgs '{
+sm2 --start PHONE_NUMBER_INSIGHTS_PROXY PHONE_NUMBER_INSIGHTS PHONE_NUMBER_GATEWAY CIP_RISK INTERNAL_AUTH --appendArgs '{
         "PHONE_NUMBER_INSIGHTS_PROXY": [
             "-J-Dauditing.consumer.baseUri.port=6001",
             "-J-Dauditing.consumer.baseUri.host=localhost",

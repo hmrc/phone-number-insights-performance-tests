@@ -32,7 +32,7 @@ object GatewayRequests extends ServicesConfiguration {
       .header(HttpHeaderNames.UserAgent, "phone-number-insights-performance-tests")
       .header("X-Correlation-ID", "1234566789")
       .body(StringBody("""|{
-                          |  "phoneNumber" : "07234567890"
+                          |  "phoneNumber" : "#{phoneNumber}"
                           |}
                           |""".stripMargin))
       .asJson

@@ -6,11 +6,9 @@ NOTE: These test rely on specific data in `staging` environment.
 If the data is missing then it can be reloaded using the data files in `src/test/resources/data/`.
 Specifically
 
-| file                    |type of data|
-|-------------------------|------------|
-| phone_number_ipp.csv    | ipp relationship data|
-| phone_number_reject.csv | watchlist data|
-| accounts.csv            |used to drive the watchlist simulation|
+| file              |type of data|
+|-------------------|------------|
+| phone_numbers.csv |used to drive the watchlist simulation|
 
 ## Running the tests
 
@@ -22,8 +20,7 @@ Prior to executing the tests ensure you have:
 If you don't have mongodb installed locally you can run it in docker using the following commands:
 
 ```bash
-    docker run --restart unless-stopped --name mongodb -p 27017:27017 -d percona/percona-server-mongodb:7.0 --replSet rs0
-    docker exec -it mongodb mongosh --eval "rs.initiate();"
+    docker run --rm -d -p 27017:27017 --name mongo percona/percona-server-mongodb:7.0
 ```
 
 If you don't have postgres installed locally you can run it in docker using the following command
@@ -33,6 +30,12 @@ If you don't have postgres installed locally you can run it in docker using the 
 ```
 
 ### Localstack setup
+
+If you don't have localstack installed locally you can run it in docker using the following commands:
+
+```bash
+    docker run --rm -d --name localstack -p 4566:4566 -p 4571:4571 localstack/localstack
+```
 
 You will need to have the following environment variables set in order to connect to localstack; they can be anything but are required by the SDK:
 
