@@ -29,14 +29,6 @@ If you don't have postgres installed locally you can run it in docker using the 
     docker run -d --rm --name postgresql -e POSTGRES_DB=phonenumberinsights -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:latest
 ```
 
-### Localstack setup
-
-If you don't have localstack installed locally you can run it in docker using the following commands:
-
-```bash
-    docker run --rm -d --name localstack -p 4566:4566 -p 4571:4571 localstack/localstack
-```
-
 You will need to have the following environment variables set in order to connect to localstack; they can be anything but are required by the SDK:
 
 ```bash

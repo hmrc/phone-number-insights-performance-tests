@@ -23,19 +23,18 @@ import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
 object InsightsRequests extends ServicesConfiguration {
 
-  val baseUrl: String = baseUrlFor("phone-number-insights-proxy")
+  val baseUrl: String = baseUrlFor("phone-number-gateway")
 
-  val checkWatchListThroughProxy: HttpRequestBuilder =
-    http("Check if account is on watch list")
+  val checkWatchListforPhoneNumberInsights: HttpRequestBuilder =
+    http("Check if number is on watch list")
       .post(s"$baseUrl/check/insights")
       .header(HttpHeaderNames.ContentType, "application/json")
       .header(HttpHeaderNames.UserAgent, "phone-number-insights-performance-tests")
-      .header("X-Correlation-ID", "1234566789")
+      .header("X-Correlation-ID", "performance-test")
       .body(StringBody("""|{
-                          |  "phoneNumber": "#{phoneNumber}"
+                          |  "phoneNumber" : "#{phoneNumber}"
                           |}
                           |""".stripMargin))
       .asJson
       .check(status.is(200))
-
 }

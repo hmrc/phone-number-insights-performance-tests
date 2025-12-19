@@ -17,16 +17,12 @@
 package uk.gov.hmrc.perftests.insights
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
-import uk.gov.hmrc.perftests.insights.GatewayRequests.checkWatchListViaGateway
-import uk.gov.hmrc.perftests.insights.InsightsRequests.checkWatchListThroughProxy
+import uk.gov.hmrc.perftests.insights.InsightsRequests.checkWatchListforPhoneNumberInsights
 
 class InsightsSimulation extends PerformanceTestRunner {
 
   setup("check-watch-list-gateway", "Check watch list via Gateway") withRequests
-    checkWatchListViaGateway
-
-  setup("check-watch-list-through-proxy", "Check watch list through proxy") withRequests
-    checkWatchListThroughProxy
+    checkWatchListforPhoneNumberInsights
 
   runSimulation()
 }
