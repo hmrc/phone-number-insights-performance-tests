@@ -10,6 +10,7 @@ sm2 --start PHONE_NUMBER_INSIGHTS_PROXY PHONE_NUMBER_INSIGHTS PHONE_NUMBER_GATEW
             "-J-Dmicroservice.services.access-control.allow-list.1=phone-number-insights-performance-tests"
         ],
         "PHONE_NUMBER_INSIGHTS": [
+            "-J-Dapplication.router=testOnlyDoNotUseInAppConf.Routes",
             "-J-Dmicroservice.phone-number-insights.database.dbName=postgres",
             "-J-Dauditing.enabled=false"
         ],
