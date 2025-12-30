@@ -40,7 +40,7 @@ Before raising a PR, ensure the smoke tests pass locally by running this script:
 
 #### Run the performance test
 
-To run a full performance test against staging environment, implement a job builder and run the test **only** from Jenkins.
+To run a full performance test against the staging environment execute the job https://performance.tools.staging.tax.service.gov.uk/job/CIR/job/phone-number-insights-performance-tests/
 
 ### Scalafmt
 This repository uses [Scalafmt](https://scalameta.org/scalafmt/), a code formatter for Scala. The formatting rules configured for this repository are defined within [.scalafmt.conf](.scalafmt.conf).
