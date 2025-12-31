@@ -29,14 +29,6 @@ If you don't have postgres installed locally you can run it in docker using the 
     docker run -d --rm --name postgresql -e POSTGRES_DB=phonenumberinsights -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:latest
 ```
 
-You will need to have the following environment variables set in order to connect to localstack; they can be anything but are required by the SDK:
-
-```bash
-export AWS_REGION=eu-west-2
-export AWS_ACCESS_KEY_ID=test
-export AWS_SECRET_ACCESS_KEY=test
-```
-
 Run the following script to start the dependent services locally `./start_services.sh`
 
 #### Smoke test
@@ -48,7 +40,7 @@ Before raising a PR, ensure the smoke tests pass locally by running this script:
 
 #### Run the performance test
 
-To run a full performance test against staging environment, implement a job builder and run the test **only** from Jenkins.
+To run a full performance test against the staging environment execute the job https://performance.tools.staging.tax.service.gov.uk/job/CIR/job/phone-number-insights-performance-tests/
 
 ### Scalafmt
 This repository uses [Scalafmt](https://scalameta.org/scalafmt/), a code formatter for Scala. The formatting rules configured for this repository are defined within [.scalafmt.conf](.scalafmt.conf).
