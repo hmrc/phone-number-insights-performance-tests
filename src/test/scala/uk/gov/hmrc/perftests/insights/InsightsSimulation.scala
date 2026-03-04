@@ -29,6 +29,7 @@ class InsightsSimulation extends PerformanceTestRunner with WatchlistTestOnlyDat
 
     // insert test data - 50,000 generated phone numbers + phone numbers from the CSV file that are marked as being on the watchlist
     // 50,000 takes on average around 16 seconds to insert, refactoring may be required if we need to push this higher
+    // insert test data - 10,000 entries in the graph database
     createWatchlistPhoneNumbers(50000)
     createGraphData(10000, 10000)
   }
