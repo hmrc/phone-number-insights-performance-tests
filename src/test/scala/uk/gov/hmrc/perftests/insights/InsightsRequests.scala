@@ -25,7 +25,7 @@ object InsightsRequests extends ServicesConfiguration {
 
   val baseUrl: String = baseUrlFor("phone-number-gateway")
 
-  val checkWatchListforPhoneNumberInsights: HttpRequestBuilder =
+  val checkPhoneNumberInsights: HttpRequestBuilder =
     http("Check if number is on watch list")
       .post(s"$baseUrl/check/insights")
       .header(HttpHeaderNames.ContentType, "application/json")
