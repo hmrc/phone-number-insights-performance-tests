@@ -17,7 +17,7 @@
 package uk.gov.hmrc.perftests.insights
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
-import uk.gov.hmrc.perftests.insights.InsightsRequests.checkWatchListforPhoneNumberInsights
+import uk.gov.hmrc.perftests.insights.InsightsRequests.checkPhoneNumberInsights
 import uk.gov.hmrc.perftests.insights.service.WatchlistTestOnlyDataService
 
 class InsightsSimulation extends PerformanceTestRunner with WatchlistTestOnlyDataService {
@@ -25,18 +25,22 @@ class InsightsSimulation extends PerformanceTestRunner with WatchlistTestOnlyDat
   before {
     // tidy up from any previous failed runs
     deleteWatchlistPhoneNumbers()
+    deleteGraphDataPhoneNumbers()
 
     // insert test data - 50,000 generated phone numbers + phone numbers from the CSV file that are marked as being on the watchlist
     // 50,000 takes on average around 16 seconds to insert, refactoring may be required if we need to push this higher
-    insertWatchlistPhoneNumbers(50000)
+    // insert test data - 10,000 entries in the graph database
+    createWatchlistPhoneNumbers(50000)
+    createGraphData(10000, 10000)
   }
 
   after {
-    // tidy up test data by removing all phone numbers from the watchlist that were inserted for this test
+    // tidy up test data by removing all phone numbers from the watchlist & graph endpoint that were inserted for this test
     deleteWatchlistPhoneNumbers()
+    deleteGraphDataPhoneNumbers()
   }
 
-  setup("check-watch-list-gateway", "Check watch list via Gateway") withRequests checkWatchListforPhoneNumberInsights
+  setup("check-watch-list-gateway", "Check watch list via Gateway") withRequests checkPhoneNumberInsights
 
   runSimulation()
 }

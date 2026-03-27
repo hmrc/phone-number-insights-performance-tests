@@ -17,6 +17,7 @@
 package uk.gov.hmrc.perftests.insights.service
 
 import io.gatling.http.Predef.HttpHeaderNames
+import play.api.libs.json._
 import play.api.libs.ws.StandaloneWSResponse
 import uk.gov.hmrc.perftests.insights.InsightsRequests.baseUrlFor
 import uk.gov.hmrc.perftests.insights.client.HttpClientHelper
@@ -45,21 +46,13 @@ trait WatchlistTestOnlyDataService extends HttpClientHelper with Logging {
     finally source.close()
   }
 
-  def insertWatchlistPhoneNumbers(numberOfGeneratedPhoneNumbers: Int): Unit = {
-    val feederPhoneNumbersOnWatchlist = readPhoneNumbersFromFeederFile()
-      .map(pn => s""""$pn"""")
-      .mkString(",")
-
-    val request =
-      s"""{
-         |  "generatedEntries":{
-         |    "numberOfEntries":$numberOfGeneratedPhoneNumbers
-         |   },
-         |  "manualEntries":{
-         |    "phoneNumbers":[$feederPhoneNumbersOnWatchlist]
-         |   }
-         |}""".stripMargin
-
+  def createWatchlistPhoneNumbers(numberOfGeneratedPhoneNumbers: Int): Unit = {
+    val phoneNumbers = readPhoneNumbersFromFeederFile()
+    val payload = Json.obj(
+      "generatedEntries" -> Json.obj("numberOfEntries" -> numberOfGeneratedPhoneNumbers),
+      "manualEntries" -> Json.obj("phoneNumbers" -> phoneNumbers)
+    )
+    val request = Json.stringify(payload)
     val response: StandaloneWSResponse =
       post(s"$baseUrl/phone-number-insights-proxy/test-only/watchlist/data/create", request, headers: _*)
 
@@ -71,5 +64,36 @@ trait WatchlistTestOnlyDataService extends HttpClientHelper with Logging {
       delete(s"$baseUrl/phone-number-insights-proxy/test-only/watchlist/data/delete", headers: _*)
 
     logger.info(s"Deleted phone numbers from watchlist, response status: ${response.status} and body: ${response.body}")
+  }
+
+  def createGraphData(numberOfRandomPhoneNumbers: Int, batchSize: Int): Unit = {
+    val phoneNumbers = readPhoneNumbersFromFeederFile()
+    val vertexRecords = Json.arr(
+      Json.obj(
+        "vertexId" -> 1,
+        "attributeId" -> JsString(phoneNumbers.headOption.getOrElse("")),
+        "data" -> "{}",
+        "vertexType" -> "phone_number",
+        "hopsToClosestRisky" -> 1
+      )
+    )
+    val payload = Json.obj(
+      "randomEntriesToGenerate" -> numberOfRandomPhoneNumbers,
+      "batchInsertSize" -> batchSize,
+      "vertexRecords" -> vertexRecords
+    )
+    val request = Json.stringify(payload)
+    val response: StandaloneWSResponse =
+      post(s"$baseUrl/test-only/cip-risk/str/vertex-data", request, headers: _*)
+
+    val message = (Json.parse(response.body) \ "message").asOpt[String].getOrElse("No message found")
+    logger.info(s"Inserted phone numbers into graph testonly endpoint, response status: ${response.status} and body: {\"message\":\"$message\"}")
+  }
+
+  def deleteGraphDataPhoneNumbers(): Unit = {
+    val response: StandaloneWSResponse =
+      delete(s"$baseUrl/test-only/cip-risk/str/vertex-data", headers: _*)
+
+    logger.info(s"Deleted phone numbers from graph testonly endpoint, response status: ${response.status} and body: ${response.body}")
   }
 }
