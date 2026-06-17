@@ -26,18 +26,21 @@ class InsightsSimulation extends PerformanceTestRunner with WatchlistTestOnlyDat
     // tidy up from any previous failed runs
     deleteWatchlistPhoneNumbers()
     deleteGraphDataPhoneNumbers()
+    deleteCountPhoneNumbers()
 
     // insert test data - 50,000 generated phone numbers + phone numbers from the CSV file that are marked as being on the watchlist
     // 50,000 takes on average around 16 seconds to insert, refactoring may be required if we need to push this higher
     // insert test data - 10,000 entries in the graph database
     createWatchlistPhoneNumbers(50000)
     createGraphData(10000, 10000)
+    createCountPhoneNumbers(10,2)
   }
 
   after {
     // tidy up test data by removing all phone numbers from the watchlist & graph endpoint that were inserted for this test
     deleteWatchlistPhoneNumbers()
     deleteGraphDataPhoneNumbers()
+    deleteCountPhoneNumbers()
   }
 
   setup("check-watch-list-gateway", "Check watch list via Gateway") withRequests checkPhoneNumberInsights
