@@ -17,7 +17,7 @@
 package uk.gov.hmrc.perftests.insights.service
 
 import io.gatling.http.Predef.HttpHeaderNames
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.libs.ws.StandaloneWSResponse
 import uk.gov.hmrc.perftests.insights.InsightsRequests.baseUrlFor
 import uk.gov.hmrc.perftests.insights.client.HttpClientHelper
@@ -95,5 +95,31 @@ trait WatchlistTestOnlyDataService extends HttpClientHelper with Logging {
       delete(s"$baseUrl/test-only/cip-risk/str/vertex-data", headers: _*)
 
     logger.info(s"Deleted phone numbers from graph testonly endpoint, response status: ${response.status} and body: ${response.body}")
+  }
+
+  def createCountPhoneNumbers(numberOfPhoneNumbers: Int, numberOfAttributeGroupsPerPhoneNumber: Int): Unit = {
+    val phoneNumbers = readPhoneNumbersFromFeederFile()
+    val payload = Json.obj(
+      "generatedEntries" -> Json.obj(
+        "numberOfPhoneNumbers" -> numberOfPhoneNumbers,
+        "numberOfAttributeGroupsPerPhoneNumber" -> numberOfAttributeGroupsPerPhoneNumber
+      ),
+      "manualEntries" -> Json.obj(
+        "phoneNumbers" -> phoneNumbers,
+        "numberOfAttributeGroupsPerPhoneNumber" -> numberOfAttributeGroupsPerPhoneNumber
+      )
+    )
+    val request = Json.stringify(payload)
+    val response: StandaloneWSResponse =
+      post(s"$baseUrl/phone-number-insights-proxy/test-only/occurrence-logs/data/create", request, headers: _*)
+
+    logger.info(s"Inserted phone numbers to get the count, response status: ${response.status} and body: ${response.body}")
+  }
+
+  def deleteCountPhoneNumbers(): Unit = {
+    val response: StandaloneWSResponse =
+      delete(s"$baseUrl/phone-number-insights-proxy/test-only/occurrence-logs/data/delete", headers: _*)
+
+    logger.info(s"Deleted phone numbers count, response status: ${response.status} and body: ${response.body}")
   }
 }
